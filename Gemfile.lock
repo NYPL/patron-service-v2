@@ -1,0 +1,58 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
+    aws-eventstream (1.1.0)
+    aws-partitions (1.313.0)
+    aws-sdk-core (3.95.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1.0)
+    aws-sdk-kms (1.31.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.1.3)
+      aws-eventstream (~> 1.0, >= 1.0.2)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
+    diff-lcs (1.3)
+    hashdiff (1.0.1)
+    jmespath (1.4.0)
+    nypl_log_formatter (0.1.3)
+    nypl_platform_api_client (1.0.0)
+    nypl_sierra_api_client (1.0.1)
+    public_suffix (4.0.4)
+    rspec (3.9.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
+    rspec-core (3.9.2)
+      rspec-support (~> 3.9.3)
+    rspec-expectations (3.9.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-mocks (3.9.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-support (3.9.3)
+    safe_yaml (1.0.5)
+    webmock (3.8.3)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  aws-sdk-kms
+  nypl_log_formatter
+  nypl_platform_api_client
+  nypl_sierra_api_client (>= 1.0)
+  rspec
+  webmock
+
+BUNDLED WITH
+   2.1.4

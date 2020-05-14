@@ -1,0 +1,416 @@
+{
+  "swagger": "2.0",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "info": {
+    "title": "Patron Service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/v0.1/patrons": {
+      "get": {
+        "tags": [
+          "patrons"
+        ],
+        "summary": "Get Patrons",
+        "operationId": "getPatrons",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "barcode",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/PatronsResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Duplicate patrons found for query",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Generic server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_auth": [
+              "openid read:patron"
+            ]
+          }
+        ]
+      }
+    },
+    "/v0.1/patrons/{id}": {
+      "get": {
+        "tags": [
+          "patrons"
+        ],
+        "summary": "Get a Patron",
+        "operationId": "getPatron",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Patron",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/PatronResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Generic server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_auth": [
+              "openid read:patron"
+            ]
+          }
+        ]
+      }
+    },
+    "/v0.1/patrons/validate": {
+      "post": {
+        "tags": [
+          "patrons"
+        ],
+        "summary": "Validate a Patron by barcode and pin",
+        "operationId": "validatePatron",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "PatronValidation",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PatronValidation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/PatronValidationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Generic server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_auth": [
+              "openid read:patron"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Patron": {
+      "title": "Patron",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5852922"
+        },
+        "updatedDate": {
+          "type": "string",
+          "example": "2016-01-07T02:32:51Z"
+        },
+        "createdDate": {
+          "type": "string",
+          "example": "2008-12-24T03:16:00Z"
+        },
+        "deletedDate": {
+          "type": "string",
+          "example": "2008-12-24"
+        },
+        "deleted": {
+          "type": "boolean",
+          "example": false
+        },
+        "suppressed": {
+          "type": "boolean",
+          "example": false
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "barCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expirationDate": {
+          "type": "string",
+          "example": "2017-08-20"
+        },
+        "homeLibraryCode": {
+          "type": "string",
+          "example": "lb"
+        },
+        "birthDate": {
+          "type": "string",
+          "example": "1978-10-15"
+        },
+        "emails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fixedFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FixedField"
+          }
+        },
+        "varFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VarField"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "FixedField": {
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "example": "Language"
+        },
+        "value": {
+          "type": "string",
+          "example": "eng"
+        },
+        "display": {
+          "type": "string",
+          "example": "English"
+        }
+      },
+      "type": "object"
+    },
+    "PatronValidation": {
+      "properties": {
+        "barcode": {
+          "type": "string",
+          "example": "343423492357719"
+        },
+        "pin": {
+          "type": "string",
+          "example": "1235"
+        }
+      },
+      "type": "object"
+    },
+    "SubField": {
+      "required": [
+        "tag"
+      ],
+      "properties": {
+        "tag": {
+          "type": "string",
+          "example": "a"
+        },
+        "content": {
+          "type": "string",
+          "example": "Wizards"
+        }
+      },
+      "type": "object"
+    },
+    "VarField": {
+      "required": [
+        "fieldTag"
+      ],
+      "properties": {
+        "fieldTag": {
+          "type": "string",
+          "example": "a"
+        },
+        "marcTag": {
+          "type": "string",
+          "example": "100"
+        },
+        "ind1": {
+          "type": "string",
+          "example": "1"
+        },
+        "ind2": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "subfields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubField"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "PatronValidationResponse": {
+      "title": "PatronValidationResponse",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "example": false
+        },
+        "message": {
+          "type": "string",
+          "example": "Invalid patron barcode and/or pin"
+        }
+      },
+      "type": "object"
+    },
+    "PatronResponse": {
+      "title": "PatronResponse",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Patron"
+        },
+        "debugInfo": {
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "PatronsResponse": {
+      "title": "PatronsResponse",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Patron"
+          }
+        },
+        "debugInfo": {
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "properties": {
+        "statusCode": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string",
+          "example": "error_type"
+        },
+        "message": {
+          "type": "string",
+          "example": "Description of error"
+        },
+        "error": {
+          "type": "object"
+        },
+        "debugInfo": {
+          "type": "object"
+        }
+      },
+      "type": "object",
+      "title": "ErrorResponse"
+    }
+  }
+}
