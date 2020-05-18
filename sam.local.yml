@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'PatronService'
+
+Resources:
+  PatronService:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handle_event
+      Runtime: ruby2.7
+      Timeout: 10
+      Environment:
+        Variables:
+          LOG_LEVEL: debug
+          SIERRA_API_BASE_URL: https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/
+          SIERRA_OAUTH_URL: https://nypl-sierra-test.nypl.org/iii/sierra-api/v3/token
+          SIERRA_OAUTH_ID: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOcLof0wS+XIKrTc+QIBEIA3U0vf8ZaPKeyWsTF9VmuIThYmkQr1UYAvnbkSQVeXf90n+h/3JHk0WwoSPSVK9yG6/WxCzIJPkA==
+          SIERRA_OAUTH_SECRET: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGowaAYJKoZIhvcNAQcGoFswWQIBADBUBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDB20W+OqtkHEZQ7jvwIBEIAnZDf6KmlbYbOMmjkiF+Y57XtB0WfjGuAac5e7P88rk850OlHP7Q2y
+      Events:
+        ApiPatronPath:
+          Type: Api
+          Properties:
+            Path: "/api/v0.1/patrons/{id}"
+            Method: GET
+        ApiPatronsPath:
+          Type: Api
+          Properties:
+            Path: "/api/v0.1/patrons"
+            Method: GET
+        ApiValidatePath:
+          Type: Api
+          Properties:
+            Path: "/api/v0.1/patrons/validate"
+            Method: POST
+        ApiValidatePath:
+          Type: Api
+          Properties:
+            Path: "/docs/patron"
+            Method: GET
