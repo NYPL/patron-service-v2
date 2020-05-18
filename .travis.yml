@@ -1,10 +1,33 @@
 language: ruby
 rvm: 2.7.1
 before_install:
- - gem install bundler
+- gem install bundler
 cache: bundler
 script:
 - bundle exec rspec -fd
+deploy:
+- provider: lambda
+  function_name: PatronService-qa
+  description: A service for retrieving patron records and validating credentials
+  region: us-east-1
+  role: arn:aws:iam::946183545209:role/lambda-full-access
+  runtime: ruby2.7
+  module_name: app
+  handler_name: handle_event
+  environment_variables:
+  - LOG_LEVEL=debug
+  - SIERRA_API_BASE_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/
+  - SIERRA_OAUTH_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v3/token
+  - SIERRA_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOcLof0wS+XIKrTc+QIBEIA3U0vf8ZaPKeyWsTF9VmuIThYmkQr1UYAvnbkSQVeXf90n+h/3JHk0WwoSPSVK9yG6/WxCzIJPkA==
+  - SIERRA_OAUTH_SECRET=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGowaAYJKoZIhvcNAQcGoFswWQIBADBUBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDB20W+OqtkHEZQ7jvwIBEIAnZDf6KmlbYbOMmjkiF+Y57XtB0WfjGuAac5e7P88rk850OlHP7Q2y
+  skip_cleanup: true
+  access_key_id: "$AWS_ACCESS_KEY_ID_QA"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
+  on:
+    branch: qa
 notifications:
   email:
     on_failure: always
+env:
+  global:
+    secure: rzABMhUu/uIPqsaDcwVABXzI+4DVyZrhEVWxr9jwFCNkjVB29tkW7o+tasXO4HY/pjLcfxEpMI2fgwwMn1Lgk+oUnxybVVFgIslKmcFHVx0SCOw+XM+r9X/dqYrXJPgL2BYOpb+AhltLjCt8DiKSHoDYXPYRBzW5H5xWR2/NE8iPbkRzS+i7WMMQra8K3ph0lkAW43ne3fNs0cULOrb6DWz9s/cVtfEj4KaVFiP6Ahtk7xQOOKxGd70JKzNYobasiVjRlqFgXXIqZ7sUlEPqokWFdMMHff8tt4m+5YrpM3CNVRYbfIGKE2HkHoXroQPoSyKhPBw7pY3iLEGQM+BQPX8+7LR9TZCjfg31NIztKm0GJCzdAPz/TKwSFUnS8s017rj3c/2qCk6NlcHf5kovgcRDgjJtP4yoWWkZVKSTpAxnsCX/K9m9M/R5cskFhl4wyijmRPh/CJ+0IuXQDAMaucY36bbl+1e9MElzWvqlW5yY3DnRHn4HFfb6gTFmkNJfKN7T7jtwBaq5HamHZJyxbtB0RRY0Lm1mTwD7oZGd/Fie2nZLNLaZHu1txFdZPjJp/opPshBrKz0ivhOmGZS91seecIYimupZ3csMuH+9xXbYRvEL/y0k2IZqRSPmTfTE+D1GxKpP3PXPaF0CHbEwgRbS4CdcoIjfvSFboXPS5xM=
