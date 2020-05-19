@@ -56,8 +56,8 @@ describe SierraPatron do
       resp = SierraPatron.by_id 56789
 
       expect(resp[:statusCode]).to eq(404)
-      expect(resp[:data]).to be_a(Hash)
-      expect(resp[:data]['httpStatus']).to eq(404)
+      expect(resp[:data]).to be_nil
+      expect(resp[:message]).to start_with("Failed to retrieve")
     end
 
     it "passes through malformed responses from Sierra" do

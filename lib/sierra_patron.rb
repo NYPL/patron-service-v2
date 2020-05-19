@@ -68,12 +68,18 @@ class SierraPatron < SierraModel
 
     response = self.sierra_client.get path
 
-    count = response.success? ? 1 : 0
-    {
-      data: response.body,
-      count: count,
-      statusCode: response.code
-    }
+    if response.success?
+      {
+        data: response.body,
+        count: 1,
+        statusCode: response.code
+      }
+    else
+      {
+        message: "Failed to retrieve #{path} from Sierra",
+        statusCode: response.code
+      }
+    end
   end
 
   def self.validate(barcode, pin)
