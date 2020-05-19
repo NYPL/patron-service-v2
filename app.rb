@@ -35,7 +35,7 @@ def handle_event(event:, context:)
     else
       return respond 400, 'Bad method'
     end
-    respond response['statusCode'], response
+    respond response[:statusCode], response
 
   rescue ParameterError => e
     respond 400, message: "ParameterError: #{e.message}"
