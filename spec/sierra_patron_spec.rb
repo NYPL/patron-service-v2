@@ -114,6 +114,27 @@ describe SierraPatron do
       expect(resp[:data][0]['id']).to eq(12345)
     end
 
+    it "calls Sierra patrons/find endpoint, returns error response when Sierra responds with 404" do
+      stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/find")
+        .with(query: {
+          "fields" => SierraPatron::PATRON_FIELDS,
+          "varFieldContent" => "user@example.com",
+          "varFieldTag" => "z"
+         })
+        .to_return({
+          status: 404,
+          body: File.read('./spec/fixtures/patron-56789-missing.json'),
+          headers: { 'Content-Type' => 'application/json;charset=UTF-8' }
+        })
+
+      resp = SierraPatron.by_filters({ 'email' => 'user@example.com' })
+
+      expect(resp[:statusCode]).to eq(404)
+      expect(resp[:count]).to be_nil
+      expect(resp[:data]).to be_nil
+      expect(resp[:message]).to eq('Failed to retrieve patron record by email=user@example.com')
+    end
+
     it "calls Sierra patrons/find endpoint when querying by id" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/find")
         .with(query: {
