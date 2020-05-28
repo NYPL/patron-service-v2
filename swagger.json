@@ -233,6 +233,12 @@
             "type": "string"
           }
         },
+        "barcodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "expirationDate": {
           "type": "string",
           "example": "2017-08-20"

@@ -25,6 +25,11 @@ describe SierraPatron do
       expect(resp[:statusCode]).to eq(200)
       expect(resp[:data]).to be_a(Hash)
       expect(resp[:data]['id']).to eq(12345)
+      expect(resp[:data]['barcodes']).to be_a(Array)
+      expect(resp[:data]['barcodes']).to include('12345678901234')
+      # Must include legacy alias for barcodes:
+      expect(resp[:data]['barCodes']).to be_a(Array)
+      expect(resp[:data]['barCodes']).to include('12345678901234')
     end
 
     it "handles deleted patron records" do
@@ -90,6 +95,9 @@ describe SierraPatron do
       expect(resp[:data]).to be_a(Array)
       expect(resp[:data][0]).to be_a(Hash)
       expect(resp[:data][0]['id']).to eq(1000001)
+      expect(resp[:data][0]['barcodes']).to be_a(Array)
+      # Must include legacy alias for barcodes:
+      expect(resp[:data][0]['barCodes']).to be_a(Array)
     end
 
     it "calls Sierra patrons/find endpoint, returns array of records" do
@@ -112,6 +120,10 @@ describe SierraPatron do
       expect(resp[:data]).to be_a(Array)
       expect(resp[:data][0]).to be_a(Hash)
       expect(resp[:data][0]['id']).to eq(12345)
+      expect(resp[:data][0]['barcodes']).to be_a(Array)
+      expect(resp[:data][0]['barcodes']).to include('12345678901234')
+      expect(resp[:data][0]['barCodes']).to be_a(Array)
+      expect(resp[:data][0]['barCodes']).to include('12345678901234')
     end
 
     it "calls Sierra patrons/find endpoint, returns error response when Sierra responds with 404" do

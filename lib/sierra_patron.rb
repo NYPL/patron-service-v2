@@ -27,7 +27,7 @@ class SierraPatron < SierraModel
       response = self.sierra_client.get 'patrons?' + URI.encode_www_form(query)
 
       {
-        data: response.body['entries'],
+        data: response.body['entries'].map { |patron| self.format_patron_record patron },
         count: response.body['total'],
         statusCode: response.code
       }
@@ -50,7 +50,7 @@ class SierraPatron < SierraModel
 
       if response.success?
         {
-          data: [ response.body ],
+          data: [ self.format_patron_record(response.body) ],
           count: 1,
           statusCode: response.code
         }
@@ -76,7 +76,7 @@ class SierraPatron < SierraModel
 
     if response.success?
       {
-        data: response.body,
+        data: self.format_patron_record(response.body),
         count: 1,
         statusCode: response.code
       }
@@ -106,5 +106,16 @@ class SierraPatron < SierraModel
       valid: true,
       message: "Successfully validated patron with barcode #{barcode}"
     }
+  end
+
+
+  def self.format_patron_record(patron)
+    # If Sierra didn't return valid JSON, don't attempt transformations:
+    return patron unless patron.is_a?(Hash)
+
+    # Create "barCodes" alias for barcodes, per legacy PatronService:
+    result = { 'barCodes' => patron['barcodes'] }.merge patron
+
+    result
   end
 end
