@@ -227,14 +227,15 @@
             "type": "string"
           }
         },
-        "barCodes": {
+        "barcodes": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "barcodes": {
+        "barCodes": {
           "type": "array",
+          "description": "Alias for barcodes. Deprecated.",
           "items": {
             "type": "string"
           }
