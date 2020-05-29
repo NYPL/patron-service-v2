@@ -42,6 +42,22 @@
     ],
     "moneyOwed": 10.00,
     "fixedFields": {
+      "43": {
+        "label": "Expiration Date",
+        "value": "2022-06-23T08:00:00Z"
+      },
+      "96": {
+        "label": "Money Owed",
+        "value": "1275.000000"
+      },
+      "123": {
+        "label": "Debit Balance",
+        "value": "0.000000"
+      },
+      "124": {
+        "label": "Current Item C",
+        "value": "0"
+      }
     },
     "varFields": [
     ]
