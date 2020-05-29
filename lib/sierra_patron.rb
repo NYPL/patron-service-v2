@@ -1,3 +1,5 @@
+require 'date'
+
 require_relative 'sierra_model'
 require_relative 'errors'
 
@@ -115,6 +117,25 @@ class SierraPatron < SierraModel
 
     # Create "barCodes" alias for barcodes, per legacy PatronService:
     result = { 'barCodes' => patron['barcodes'] }.merge patron
+
+    # Translate the following fixed fields into integers:
+    # (This was the practice of the legacy PatronService, presumably to suit HTC's needs.)
+    [
+      '96', # Money owed
+      '123' # Debit Balance
+    ].each do |fixed_num|
+      result['fixedFields'][fixed_num]['value'] = result['fixedFields'][fixed_num]['value'].to_i unless result.dig('fixedFields', fixed_num, 'value').nil?
+    end
+
+    # Ensure datetimes are formatted correctly:
+    [
+      'createdDate',
+      'updatedDate'
+    ].each do |date_property|
+      # Sierra datetimes resemble:  "2020-04-21T01:00:37Z"
+      # We want them formatted as:  "2020-04-21T01:00:37+00:00"
+      result[date_property] = DateTime.parse(result[date_property]).strftime('%FT%T%:z') unless result[date_property].nil?
+    end
 
     result
   end

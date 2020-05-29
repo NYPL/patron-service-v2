@@ -11,25 +11,57 @@ describe SierraPatron do
   end
 
   describe :by_id do
-    it "calls Sierra patron/:id endpoint, returns record" do
-      stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/12345")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
-        .to_return({
-          status: 200,
-          body: File.read('./spec/fixtures/patron-12345.json'),
-          headers: { 'Content-Type' => 'application/json;charset=UTF-8' }
-        })
+    describe 'for a typical record' do
+      before(:each) do
+        stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/12345")
+          .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+          .to_return({
+            status: 200,
+            body: File.read('./spec/fixtures/patron-12345.json'),
+            headers: { 'Content-Type' => 'application/json;charset=UTF-8' }
+          })
+      end
 
-      resp = SierraPatron.by_id 12345
+      it "calls Sierra patron/:id endpoint, returns record" do
+        resp = SierraPatron.by_id 12345
 
-      expect(resp[:statusCode]).to eq(200)
-      expect(resp[:data]).to be_a(Hash)
-      expect(resp[:data]['id']).to eq(12345)
-      expect(resp[:data]['barcodes']).to be_a(Array)
-      expect(resp[:data]['barcodes']).to include('12345678901234')
-      # Must include legacy alias for barcodes:
-      expect(resp[:data]['barCodes']).to be_a(Array)
-      expect(resp[:data]['barCodes']).to include('12345678901234')
+        expect(resp[:statusCode]).to eq(200)
+        expect(resp[:data]).to be_a(Hash)
+        expect(resp[:data]['id']).to eq(12345)
+        expect(resp[:data]['barcodes']).to be_a(Array)
+        expect(resp[:data]['barcodes']).to include('12345678901234')
+      end
+
+      it 'adds barCodes alias' do
+        resp = SierraPatron.by_id 12345
+
+        # Must include legacy alias for barcodes:
+        expect(resp[:data]['barCodes']).to be_a(Array)
+        expect(resp[:data]['barCodes']).to include('12345678901234')
+      end
+
+      it 'casts fixed 96 and 123 (only) to integers' do
+        resp = SierraPatron.by_id 12345
+
+        # Unclear why exactly, but the following fixedFields must be cast to ints:
+        expect(resp[:data]['fixedFields']['96']['value']).to be_a(Integer)
+        expect(resp[:data]['fixedFields']['96']['value']).to eq(1275)
+        expect(resp[:data]['fixedFields']['123']['value']).to be_a(Integer)
+        expect(resp[:data]['fixedFields']['123']['value']).to eq(0)
+        # Verify the cast was not applied generally:
+        expect(resp[:data]['fixedFields']['43']['value']).to be_a(String)
+        expect(resp[:data]['fixedFields']['43']['value']).to eq('2022-06-23T08:00:00Z')
+      end
+
+      it 'formats datetimes with hour and minute offsets' do
+        resp = SierraPatron.by_id 12345
+
+        expect(resp[:data]['createdDate']).to eq('2020-04-21T01:00:37+00:00')
+        expect(resp[:data]['updatedDate']).to eq('2020-04-21T01:00:49+00:00')
+
+        # Ensure other "dates" are untouched
+        expect(resp[:data]['birthDate']).to eq('1896-11-22')
+      end
     end
 
     it "handles deleted patron records" do
@@ -47,6 +79,7 @@ describe SierraPatron do
       expect(resp[:data]).to be_a(Hash)
       expect(resp[:data]['id']).to eq(56789)
       expect(resp[:data]['deleted']).to eq(true)
+      expect(resp[:data]['deletedDate']).to eq('2019-10-10')
     end
 
     it "handles missing patron records" do
