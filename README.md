@@ -32,7 +32,7 @@ sam local invoke --region us-east-1 --template sam.local.yml --profile nypl-digi
 
 ## Contributing
 
-This repo follows a [Development-QA-Master Git Workflow](https://github.com/NYPL/engineering-general/blob/a19c78b028148465139799f09732e7eb10115eef/standards/git-workflow.md#development-qa-master)
+This repo follows a [Development-QA-Main Git Workflow](https://github.com/NYPL/engineering-general/blob/master/standards/git-workflow.md#development-qa-main)
 
 ## Testing
 

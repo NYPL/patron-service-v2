@@ -17,7 +17,7 @@ deploy:
   environment_variables:
   - LOG_LEVEL=debug
   - SIERRA_API_BASE_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/
-  - SIERRA_OAUTH_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v3/token
+  - SIERRA_OAUTH_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/token
   - SIERRA_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOcLof0wS+XIKrTc+QIBEIA3U0vf8ZaPKeyWsTF9VmuIThYmkQr1UYAvnbkSQVeXf90n+h/3JHk0WwoSPSVK9yG6/WxCzIJPkA==
   - SIERRA_OAUTH_SECRET=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGowaAYJKoZIhvcNAQcGoFswWQIBADBUBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDB20W+OqtkHEZQ7jvwIBEIAnZDf6KmlbYbOMmjkiF+Y57XtB0WfjGuAac5e7P88rk850OlHP7Q2y
   skip_cleanup: true
@@ -25,6 +25,25 @@ deploy:
   secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
   on:
     branch: qa
+- provider: lambda
+  function_name: PatronService-production
+  description: A service for retrieving patron records and validating credentials
+  region: us-east-1
+  role: arn:aws:iam::946183545209:role/lambda-full-access
+  runtime: ruby2.7
+  module_name: app
+  handler_name: handle_event
+  environment_variables:
+  - LOG_LEVEL=info
+  - SIERRA_API_BASE_URL=https://ilsstaff.nypl.org/iii/sierra-api/v5
+  - SIERRA_OAUTH_URL=https://ilsstaff.nypl.org/iii/sierra-api/v5/token
+  - SIERRA_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDFHOxZ4a+DRzyKJToQIBEIA3Hjij1jJNduvkCmlcSGKsNzNHJam7cny7raZBZaLFPexBqLtGiq1tFsHuspPTug0mD0tng4ei6Q==
+  - SIERRA_OAUTH_SECRET=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGowaAYJKoZIhvcNAQcGoFswWQIBADBUBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDFy6S4RAjurMoj4OsQIBEIAnK+iNakNdoZrez4CMKzqfCeW8qs2HRxXE3lbuoc9CpAawAga4ePgG
+  skip_cleanup: true
+  access_key_id: "$AWS_ACCESS_KEY_ID_PRODUCTION"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY_PRODUCTION"
+  on:
+    branch: main
 notifications:
   email:
     on_failure: always
