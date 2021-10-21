@@ -16,6 +16,7 @@ deploy:
   handler_name: handle_event
   environment_variables:
   - LOG_LEVEL=debug
+  - DEFAULT_FIELDS=id,names,barcodes,expirationDate,emails,patronType,homeLibraryCode,phones,moneyOwed,fixedFields
   - SIERRA_API_BASE_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/
   - SIERRA_OAUTH_URL=https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/token
   - SIERRA_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOcLof0wS+XIKrTc+QIBEIA3U0vf8ZaPKeyWsTF9VmuIThYmkQr1UYAvnbkSQVeXf90n+h/3JHk0WwoSPSVK9yG6/WxCzIJPkA==
@@ -35,6 +36,7 @@ deploy:
   handler_name: handle_event
   environment_variables:
   - LOG_LEVEL=info
+  - DEFAULT_FIELDS=id,names,barcodes,expirationDate,emails,patronType,homeLibraryCode,phones,moneyOwed,fixedFields
   - SIERRA_API_BASE_URL=https://ilsstaff.nypl.org/iii/sierra-api/v5
   - SIERRA_OAUTH_URL=https://ilsstaff.nypl.org/iii/sierra-api/v5/token
   - SIERRA_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDFHOxZ4a+DRzyKJToQIBEIA3Hjij1jJNduvkCmlcSGKsNzNHJam7cny7raZBZaLFPexBqLtGiq1tFsHuspPTug0mD0tng4ei6Q==

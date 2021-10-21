@@ -14,7 +14,7 @@ describe SierraPatron do
     describe 'for a typical record' do
       before(:each) do
         stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/12345")
-          .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+          .with(query: { "fields" => ENV["DEFAULT_FIELDS"] })
           .to_return({
             status: 200,
             body: File.read('./spec/fixtures/patron-12345.json'),
@@ -66,7 +66,7 @@ describe SierraPatron do
 
     it "handles deleted patron records" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/56789")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .with(query: { "fields" => ENV["DEFAULT_FIELDS"] })
         .to_return({
           status: 200,
           body: File.read('./spec/fixtures/patron-56789-deleted.json'),
@@ -83,8 +83,8 @@ describe SierraPatron do
     end
 
     it "handles missing patron records" do
-      stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/56789")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+      stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/56789?")
+        .with(query: { "fields" => ENV["DEFAULT_FIELDS"] })
         .to_return({
           status: 404,
           body: File.read('./spec/fixtures/patron-56789-missing.json'),
@@ -100,7 +100,7 @@ describe SierraPatron do
 
     it "passes through malformed responses from Sierra" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/56789")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .with(query: { "fields" => ENV["DEFAULT_FIELDS"] })
         .to_return(status: 200, body: "<html><body>Unexpected Error</body></html")
 
       resp = SierraPatron.by_id 56789
@@ -114,7 +114,7 @@ describe SierraPatron do
   describe :by_filters do
     it "calls Sierra patrons endpoint, returns first 50 records" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .with(query: { "fields" => ENV["DEFAULT_FIELDS"] })
         .to_return({
           status: 200,
           body: File.read('./spec/fixtures/patrons.json'),
@@ -136,7 +136,7 @@ describe SierraPatron do
     it "calls Sierra patrons/find endpoint, returns array of records" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/find")
         .with(query: {
-          "fields" => SierraPatron::PATRON_FIELDS,
+          "fields" => ENV["DEFAULT_FIELDS"],
           "varFieldContent" => "user@example.com",
           "varFieldTag" => "z"
          })
@@ -162,7 +162,7 @@ describe SierraPatron do
     it "calls Sierra patrons/find endpoint, returns error response when Sierra responds with 404" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/find")
         .with(query: {
-          "fields" => SierraPatron::PATRON_FIELDS,
+          "fields" => ENV["DEFAULT_FIELDS"],
           "varFieldContent" => "user@example.com",
           "varFieldTag" => "z"
          })
@@ -183,7 +183,7 @@ describe SierraPatron do
     it "calls Sierra patrons/find endpoint when querying by id" do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/find")
         .with(query: {
-          "fields" => SierraPatron::PATRON_FIELDS,
+          "fields" => ENV["DEFAULT_FIELDS"],
           "id" => "12345"
          })
         .to_return({
@@ -203,7 +203,7 @@ describe SierraPatron do
 
     it "ignores unsupported filters, returning first 50 instead", current: true  do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .with(query: { "fields" => ENV["DEFAULT_FIELDS"] })
         .to_return({
           status: 200,
           body: File.read('./spec/fixtures/patrons.json'),
