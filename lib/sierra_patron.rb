@@ -5,7 +5,7 @@ require_relative 'errors'
 
 class SierraPatron < SierraModel
   PATRON_FIELDS = 'id,updatedDate,createdDate,deletedDate,deleted,suppressed,names,barcodes,expirationDate,birthDate,emails,patronType,patronCodes,homeLibraryCode,message,blockInfo,addresses,phones,moneyOwed,fixedFields,varFields'
-  DEFAULT_FIELDS = ENV['DEFAULT_FIELDS']
+  DEFAULT_FIELDS = ENV['DEFAULT_FIELDS'] || 'id,names,barcodes,expirationDate,emails,patronType,homeLibraryCode,phones,moneyOwed,fixedFields'
 
   PATRON_FILTERS_TO_VAR_FIELDS = {
     'email' => 'z',

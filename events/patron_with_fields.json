@@ -1,11 +1,11 @@
 {
   "body": "",
   "resource": "/{proxy+}",
-  "path": "/api/v0.1/patrons/1025192",
+  "path": "/api/v0.1/patrons/5035845",
   "httpMethod": "GET",
   "isBase64Encoded": true,
   "queryStringParameters": {
-    "fields": "id,names,barcodes" 
+    "fields": "id,names,barcodes"
   },
   "multiValueQueryStringParameters": {
   },

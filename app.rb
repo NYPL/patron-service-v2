@@ -59,9 +59,10 @@ end
 
 def handle_patrons(event)
   # Build hash of used filters:
-  filters = parse_params SierraPatron.allowed_filters + ['fields'], event
+  filters = parse_params SierraPatron.allowed_filters, event
+  fields = (parse_params ['fields'], event)['fields']
 
-  SierraPatron.by_filters filters, filters['fields']
+  SierraPatron.by_filters filters, fields
 end
 
 def handle_patron_validate(event)
