@@ -5,6 +5,7 @@ require_relative 'errors'
 
 class SierraPatron < SierraModel
   PATRON_FIELDS = 'id,updatedDate,createdDate,deletedDate,deleted,suppressed,names,barcodes,expirationDate,birthDate,emails,patronType,patronCodes,homeLibraryCode,message,blockInfo,addresses,phones,moneyOwed,fixedFields,varFields'
+  DEFAULT_FIELDS = ENV['DEFAULT_FIELDS'] || 'id,names,barcodes,expirationDate,emails,patronType,homeLibraryCode,phones,moneyOwed,fixedFields'
 
   PATRON_FILTERS_TO_VAR_FIELDS = {
     'email' => 'z',
@@ -16,17 +17,25 @@ class SierraPatron < SierraModel
     PATRON_FILTERS_TO_VAR_FIELDS.keys.concat [ 'id' ]
   end
 
-  def self.by_filters(filters = {})
+  def self.fields(requested_fields)
+    requested_fields ||= DEFAULT_FIELDS
+    requested_fields == 'all' ? PATRON_FIELDS : requested_fields
+  end
+
+  def self.by_filters(filters = {}, requested_fields = nil)
     # Exclude unsupported filters:
     filters.reject! { |k, v| ! allowed_filters.include? k }
 
     query = {
-      fields: PATRON_FIELDS
+      fields: self.fields(requested_fields)
     }
 
     # If no filters, just return first 50 patrons:
     if filters.empty?
-      response = self.sierra_client.get 'patrons?' + URI.encode_www_form(query)
+
+      path = "patrons?#{URI.encode_www_form(query)}"
+      $logger.debug "Performing Sierra query: #{path}"
+      response = self.sierra_client.get path
 
       {
         data: response.body['entries'].map { |patron| self.format_patron_record patron },
@@ -65,9 +74,9 @@ class SierraPatron < SierraModel
     end
   end
 
-  def self.by_id(id)
+  def self.by_id(id, requested_fields = nil)
     query = {
-      fields: PATRON_FIELDS
+      fields: self.fields(requested_fields)
     }
 
     path = "patrons/#{id}?#{URI.encode_www_form(query)}"

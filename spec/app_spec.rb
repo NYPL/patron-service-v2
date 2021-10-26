@@ -66,7 +66,7 @@ describe :app, :type => :controller do
 
     it 'responds to patrons/12345 with 200 and patron body' do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/12345")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .with(query: { "fields" => ENV['DEFAULT_FIELDS'] })
         .to_return({
           status: 200,
           body: File.read('./spec/fixtures/patron-12345.json'),
@@ -89,9 +89,40 @@ describe :app, :type => :controller do
       expect(JSON.parse(response[:body])['data']['id']).to eq(12345)
     end
 
+    it 'responds to patrons/12345?fields=all with 200 and patron body' do
+      stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/12345?fields=all")
+        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .to_return({
+          status: 200,
+          body: File.read('./spec/fixtures/patron-12345.json'),
+          headers: { 'Content-Type' => 'application/json;charset=UTF-8' }
+        })
+
+      response = handle_event(
+        event: {
+          "path" => '/api/v0.1/patrons/12345',
+          "httpMethod" => 'GET',
+          "pathParameters" => { "id" => '12345' },
+          "queryStringParameters" => {
+            "fields" => "all"
+          },
+        },
+        context: {}
+      )
+
+      expect(response[:statusCode]).to eq(200)
+      expect(response[:body]).to be_a(String)
+      expect(JSON.parse(response[:body])).to be_a(Hash)
+      expect(JSON.parse(response[:body])['data']).to be_a(Hash)
+      expect(JSON.parse(response[:body])['data']['id']).to eq(12345)
+    end
+
+    it 'responds to patrons/12345?fields=id,names,barcodes with 200 and patron body' do
+    end
+
     it 'passes Sierra status code to response' do
       stub_request(:get, "#{ENV['SIERRA_API_BASE_URL']}patrons/5678")
-        .with(query: { "fields" => SierraPatron::PATRON_FIELDS })
+        .with(query: { "fields" => "id,names,barcodes" })
         .to_return({
           status: 418,
           body: {
@@ -107,7 +138,10 @@ describe :app, :type => :controller do
         event: {
           "path" => '/api/v0.1/patrons/5678',
           "httpMethod" => 'GET',
-          "pathParameters" => { "id" => '5678' }
+          "pathParameters" => { "id" => '5678' },
+          "queryStringParameters" => {
+            "fields" => "id,names,barcodes"
+          },
         },
         context: {}
       )

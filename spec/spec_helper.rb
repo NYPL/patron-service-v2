@@ -11,6 +11,7 @@ ENV['SIERRA_OAUTH_ID'] = Base64.strict_encode64 'fake-client'
 ENV['SIERRA_OAUTH_SECRET'] = Base64.strict_encode64 'fake-secret'
 ENV['SIERRA_OAUTH_URL'] = 'https://example.com/oauth'
 ENV['APP_ENV'] = 'test'
+ENV['DEFAULT_FIELDS'] = 'id,names,barcodes,expirationDate,emails,patronType,homeLibraryCode,phones,moneyOwed,fixedFields'
 
 $logger = NyplLogFormatter.new(STDOUT, level: ENV['LOG_LEVEL'] || 'info')
 
