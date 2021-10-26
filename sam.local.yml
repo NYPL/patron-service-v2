@@ -12,6 +12,7 @@ Resources:
       Environment:
         Variables:
           LOG_LEVEL: debug
+          DEFAULT_FIELDS: id,names,barcodes,expirationDate,emails,patronType,homeLibraryCode,phones,moneyOwed,fixedFields
           SIERRA_API_BASE_URL: https://nypl-sierra-test.nypl.org/iii/sierra-api/v5/
           SIERRA_OAUTH_URL: https://nypl-sierra-test.nypl.org/iii/sierra-api/v3/token
           SIERRA_OAUTH_ID: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAHoweAYJKoZIhvcNAQcGoGswaQIBADBkBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOcLof0wS+XIKrTc+QIBEIA3U0vf8ZaPKeyWsTF9VmuIThYmkQr1UYAvnbkSQVeXf90n+h/3JHk0WwoSPSVK9yG6/WxCzIJPkA==
