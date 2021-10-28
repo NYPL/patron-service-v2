@@ -50,6 +50,14 @@
             "required": false,
             "type": "string",
             "format": "string"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "string",
+            "description": "Desired data fields for the patron, e.g. names, id, emails, etc. Can pass 'all' to receive all information for the patron"
           }
         ],
         "responses": {
@@ -108,6 +116,14 @@
             "required": true,
             "type": "string",
             "format": "string"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "string",
+            "description": "Desired data fields for the patron, e.g. names, id, emails, etc. Can pass 'all' to receive all information for the patron"
           }
         ],
         "responses": {
