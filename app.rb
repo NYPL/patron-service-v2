@@ -21,6 +21,7 @@ def handle_event(event:, context:)
   method = event["httpMethod"].downcase
 
   $logger.debug "Handling #{method} #{path}"
+  $logger.debug event
 
   begin
     response = nil
