@@ -87,6 +87,13 @@ describe :app, :type => :controller do
       expect(JSON.parse(response[:body])).to be_a(Hash)
       expect(JSON.parse(response[:body])['data']).to be_a(Hash)
       expect(JSON.parse(response[:body])['data']['id']).to eq(12345)
+
+      # Expect CORS and Content-Type headers:
+      expect(response[:headers]).to be_a(Hash)
+      expect(response[:headers]).to include(
+        :'Access-Control-Allow-Origin' => '*',
+        :'Content-Type' => 'application/json'
+      )
     end
 
     it 'passes Sierra status code to response' do
@@ -114,14 +121,6 @@ describe :app, :type => :controller do
 
       expect(response[:statusCode]).to eq(418)
       expect(response[:body]).to be_a(String)
-
-      # Expect CORS and Content-Type headers:
-      expect(response[:headers]).to be_a(Hash)
-      expect(response[:headers]).to include(
-        :'Access-Control-Allow-Origin' => '*',
-        :'Content-Type' => 'application/json'
-      )
-
       expect(JSON.parse(response[:body])).to be_a(Hash)
       expect(JSON.parse(response[:body])['message']).to start_with("Failed to retrieve")
     end
