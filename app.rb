@@ -106,7 +106,8 @@ def respond(statusCode = 200, body = nil)
     statusCode: statusCode,
     body: body.to_json,
     headers: {
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      "Access-Control-Allow-Origin": "*"
     }
   }
 end
