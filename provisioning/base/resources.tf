@@ -23,7 +23,7 @@ data "archive_file" "lambda_zip" {
 
 # Upload the zipped app to S3:
 resource "aws_s3_object" "uploaded_zip" {
-  bucket = "PatronService-${var.environment}"
+  bucket = "nypl-travis-builds-${var.environment}"
   key    = "PatronService${var.environment}-dist.zip"
   acl    = "private"
   source = data.archive_file.lambda_zip.output_path
