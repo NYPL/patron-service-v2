@@ -87,6 +87,13 @@ describe :app, :type => :controller do
       expect(JSON.parse(response[:body])).to be_a(Hash)
       expect(JSON.parse(response[:body])['data']).to be_a(Hash)
       expect(JSON.parse(response[:body])['data']['id']).to eq(12345)
+
+      # Expect CORS and Content-Type headers:
+      expect(response[:headers]).to be_a(Hash)
+      expect(response[:headers]).to include(
+        :'Access-Control-Allow-Origin' => '*',
+        :'Content-Type' => 'application/json'
+      )
     end
 
     it 'responds to patrons/12345?fields=all with 200 and patron body' do
