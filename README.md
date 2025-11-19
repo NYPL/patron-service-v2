@@ -1,3 +1,6 @@
+# Deprecated
+As of Oct 2025, this app is no longer in use at NYPL. The patron/:id route has been consolidated into [PatronServices](https://github.com/NYPL/PatronServices)
+
 # Patron Service
 
 ## Purpose
